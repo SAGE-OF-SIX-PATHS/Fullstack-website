@@ -36,7 +36,11 @@ app.use("/sessions", authenticate, sessionRoutes);
 
 app.use(errorHandler);
 
-const PORT = process.env.PORT || ENV_PORT || 5000;
+const PORT = process.env.PORT || ENV_PORT;
+
+if (!PORT) {
+  throw new Error("❌ PORT not defined! Set it in your env or through the host.");
+}
 
 app.listen(PORT, async () => {
   console.log(`✅ Server listening on port ${PORT} in ${NODE_ENV} environment`);
