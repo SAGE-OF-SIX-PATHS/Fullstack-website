@@ -45,7 +45,7 @@ app.use(errorHandler);
 // ✅ CORRECT PORT BINDING
 const PORT = process.env.PORT || ENV_PORT || 5000;
 
-app.listen(5000, async () => {
+app.listen(PORT, async () => {
   console.log(`✅ Server listening on port  ${PORT} in ${NODE_ENV} environment`);
   await connectToDatabase();
 });
