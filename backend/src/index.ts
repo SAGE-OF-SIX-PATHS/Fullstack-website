@@ -1,6 +1,7 @@
+import cors from "cors";
 import "dotenv/config";
 import express, { Request, Response } from "express";
-import cors from "cors";
+
 import cookieParser from "cookie-parser";
 import connectToDatabase from "./config/db";
 import errorHandler from "./middleware/errorHandler";
@@ -12,16 +13,17 @@ import productroutes from "./routes/product.route";
 import { APP_ORIGIN, NODE_ENV, PORT as ENV_PORT } from "./constants/env";
 
 const app = express();
-
-// Middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
     origin: APP_ORIGIN,
     credentials: true,
   })
 );
+
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 app.use(cookieParser());
 
 // Health check
@@ -43,7 +45,7 @@ app.use(errorHandler);
 // ✅ CORRECT PORT BINDING
 const PORT = process.env.PORT || ENV_PORT || 5000;
 
-app.listen(PORT, async () => {
+app.listen(5000, async () => {
   console.log(`✅ Server listening on port  ${PORT} in ${NODE_ENV} environment`);
   await connectToDatabase();
 });
