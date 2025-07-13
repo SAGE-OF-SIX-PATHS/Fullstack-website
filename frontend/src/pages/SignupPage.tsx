@@ -5,7 +5,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { Eye, EyeOff, UserPlus, ShoppingBag, Check } from 'lucide-react';
 import toast from 'react-hot-toast';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
-import { Outlet, useLocation } from 'react-router-dom';
+// import {  useLocation } from 'react-router-dom';
 
 const SignupPage = () => {
           const [name, setName] = useState('');
@@ -26,8 +26,8 @@ const SignupPage = () => {
 
           const { register } = useAuth();
           const navigate = useNavigate();
-          const location = useLocation();
-          const from = location.state?.from?.pathname || '/signup';
+          // const location = useLocation();
+          // const from = location.state?.from?.pathname || '/signup';
 
           const validateForm = () => {
                     const newErrors: {
