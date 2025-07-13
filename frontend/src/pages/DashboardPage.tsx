@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { ShoppingCart, Search, User, Bell, Star, TrendingUp, Gamepad2, Crown, Zap } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
+// import { useAuth } from '../contexts/AuthContext';
+// import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
           const [activeCategory, setActiveCategory] = useState('featured');
           const [cartItems, setCartItems] = useState(3);
           const [isLoading, setIsLoading] = useState(true);
-          const { currentUser, logout } = useAuth();
-          const navigate = useNavigate();
+          // const  currentUser  = useAuth();
+          // const navigate = useNavigate();
 
           useEffect(() => {
                     const timer = setTimeout(() => setIsLoading(false), 1000);
@@ -64,20 +64,20 @@ const Dashboard = () => {
                     }
           };
 
-          const getDisplayName = () => {
-                    if (!currentUser) return 'Guest';
+          // const getDisplayName = () => {
+          //           if (!currentUser) return 'Guest';
 
-                    // First try name, then email username
-                    if (currentUser.name) {
-                              return currentUser.name.split(' ')[0]; // Return first name only
-                    }
+          //           // First try name, then email username
+          //           if (currentUser.name) {
+          //                     return currentUser.name.split(' ')[0]; // Return first name only
+          //           }
 
-                    if (currentUser.email) {
-                              return currentUser.email.split('@')[0]; // Return email username
-                    }
+          //           if (currentUser.email) {
+          //                     return currentUser.email.split('@')[0]; // Return email username
+          //           }
 
-                    return 'Gamer';
-          };
+          //           return 'Gamer';
+          // };
 
           if (isLoading) {
                     return (
@@ -142,7 +142,8 @@ const Dashboard = () => {
                                                                                 <div className="w-8 h-8 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center">
                                                                                           <User className="w-4 h-4 text-white" />
                                                                                 </div>
-                                                                                <span className="text-sm font-medium">{getDisplayName()}</span>
+                                                                                <span className="text-sm font-medium"> welcome</span>
+                                                                                {/* getDisplayNmae */}
                                                                       </div>
                                                             </div>
                                                   </div>
@@ -193,7 +194,7 @@ const Dashboard = () => {
                                                                       <div className="absolute inset-0 bg-gradient-to-r from-purple-600/10 to-pink-600/10 animate-pulse"></div>
                                                                       <div className="relative z-10">
                                                                                 <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
-                                                                                          Welcome back, {getDisplayName()}!
+                                                                                          {/* Welcome back, {getDisplayName()}! */}
                                                                                 </h2>
                                                                                 <p className="text-xl text-gray-200 mb-6">
                                                                                           Discover amazing games tailored just for you
