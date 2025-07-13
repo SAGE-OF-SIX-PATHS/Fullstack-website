@@ -10,7 +10,7 @@ import authRoutes from "./routes/auth.route";
 import userRoutes from "./routes/user.route";
 import sessionRoutes from "./routes/session.route";
 import productroutes from "./routes/product.route";
-import { APP_ORIGIN, NODE_ENV, PORT as ENV_PORT } from "./constants/env";
+import { APP_ORIGIN, NODE_ENV, PORT } from "./constants/env";
 
 const app = express();
 app.use(
@@ -43,7 +43,6 @@ app.use("/sessions", authenticate, sessionRoutes);
 app.use(errorHandler);
 
 // ✅ CORRECT PORT BINDING
-const PORT = process.env.PORT || ENV_PORT || 5000;
 
 app.listen(PORT, async () => {
   console.log(`✅ Server listening on port  ${PORT} in ${NODE_ENV} environment`);
