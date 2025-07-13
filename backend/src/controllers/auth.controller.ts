@@ -8,6 +8,7 @@ import {
   sendPasswordResetEmail,
   verifyEmail,
 } from "../services/auth.service";
+
 import appAssert from "../utils/appAssert";
 import {
   clearAuthCookies,
@@ -15,6 +16,7 @@ import {
   getRefreshTokenCookieOptions,
   setAuthCookies,
 } from "../utils/cookies";
+
 import { verifyToken } from "../utils/jwt";
 import catchErrors from "../utils/catchErrors";
 import {
@@ -24,6 +26,48 @@ import {
   resetPasswordSchema,
   verificationCodeSchema,
 } from "./auth.schemas";
+
+//googleAuth unique import
+import { Request, Response } from "express";
+import jwt from "jsonwebtoken";
+import admin from "../config/firebase";
+import User, { UserDocument } from "../models/user.model";
+
+export const googleAuthHandler = async (req: Request, res: Response) => {
+  const { idToken } = req.body;
+  console.log("Received ID Token:", idToken);
+
+  try {
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+    console.log("Decoded Token:", decodedToken);
+
+    const { uid, name, email, picture } = decodedToken;
+
+    let user = await User.findOne({ email });
+    console.log("User found in DB:", user);
+
+    if (!user) {
+      console.log("No user found, creating a new one...");
+      user = await User.create({ uid, name, email, photoURL: picture });
+      console.log("New user created:", user);
+    }
+
+    const token = jwt.sign(
+      { id: user._id, role: user.role },
+      process.env.JWT_SECRET as string,
+      { expiresIn: '7d' }
+    );
+
+    console.log("Generated JWT Token:", token);
+    res.json({ token, user });
+
+  } catch (err) {
+    console.error("Error during Google Auth:", err);
+    res.status(401).json({ error: 'Invalid token' });
+  }
+};
+
+
 
 export const registerHandler = catchErrors(async (req, res) => {
   const request = registerSchema.parse({

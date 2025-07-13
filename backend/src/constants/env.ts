@@ -1,4 +1,3 @@
-// Add this at the top of env.ts
 import dotenv from 'dotenv';
 import path from 'path';
 
@@ -18,8 +17,15 @@ const getEnv = (key: string, defaultValue?: string): string => {
 export const NODE_ENV = getEnv("NODE_ENV", "development");
 export const PORT = getEnv("PORT", "3000");
 export const MONGO_URI = getEnv("MONGO_URI");
-export const APP_ORIGIN = getEnv("APP_ORIGIN", "http://localhost:3000"); // Added default value
 export const JWT_SECRET = getEnv("JWT_SECRET");
 export const JWT_REFRESH_SECRET = getEnv("JWT_REFRESH_SECRET");
 export const EMAIL_SENDER = getEnv("EMAIL_SENDER");
 export const RESEND_API_KEY = getEnv("RESEND_API_KEY");
+
+// ✅ Fixed APP_ORIGIN:
+export const APP_ORIGIN = getEnv(
+  "APP_ORIGIN",
+  NODE_ENV === "production"
+    ? "https://fullstack-website-v3av.vercel.app"
+    : "http://localhost:5173"
+);

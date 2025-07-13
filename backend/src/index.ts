@@ -10,8 +10,14 @@ import userRoutes from "./routes/user.route";
 import sessionRoutes from "./routes/session.route";
 import { APP_ORIGIN, NODE_ENV, PORT } from "./constants/env";
 import productroutes from "./routes/product.route";
+import dotenv from "dotenv";
 
 const app = express();
+
+dotenv.config();
+
+app.use(express.json());
+app.use(cors())
 
 // add middleware
 app.use(express.json());
