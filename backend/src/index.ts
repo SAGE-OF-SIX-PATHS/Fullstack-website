@@ -8,18 +8,12 @@ import authenticate from "./middleware/authenticate";
 import authRoutes from "./routes/auth.route";
 import userRoutes from "./routes/user.route";
 import sessionRoutes from "./routes/session.route";
-import { APP_ORIGIN, NODE_ENV, PORT } from "./constants/env";
 import productroutes from "./routes/product.route";
-import dotenv from "dotenv";
+import { APP_ORIGIN, NODE_ENV, PORT as ENV_PORT } from "./constants/env";
 
 const app = express();
 
-dotenv.config();
-
-app.use(express.json());
-app.use(cors())
-
-// add middleware
+// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
@@ -30,27 +24,26 @@ app.use(
 );
 app.use(cookieParser());
 
-// health check
-app.get("/", (req: Request, res: Response)=> {
-   res.status(200).json({
+// Health check
+app.get("/", (req: Request, res: Response) => {
+  res.status(200).json({
     status: "healthy",
   });
 });
 
-// auth routes
+// Routes
 app.use("/auth", authRoutes);
-
-//product routes
 app.use("/products", productroutes);
-
-// protected routes
 app.use("/user", authenticate, userRoutes);
 app.use("/sessions", authenticate, sessionRoutes);
 
-// error handler
+// Error handler
 app.use(errorHandler);
 
-app.listen(process.env.PORT || PORT, async () => {
-  console.log(`Server listening on port ${PORT} in ${NODE_ENV} environment`);
+// ✅ CORRECT PORT BINDING
+const PORT = process.env.PORT || ENV_PORT || 5000;
+
+app.listen(PORT, async () => {
+  console.log(`✅ Server listening on port ${PORT} in ${NODE_ENV} environment`);
   await connectToDatabase();
 });
