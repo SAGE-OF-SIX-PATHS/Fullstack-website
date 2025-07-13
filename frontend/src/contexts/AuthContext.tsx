@@ -1,17 +1,21 @@
+// ✅ AuthContext.tsx
+// contexts/AuthContext.tsx
 import { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
-
 import axios from 'axios';
-import { API_URL } from '../config';
+
+const API_URL = 'http://localhost:5000';
 
 interface User {
           _id: string;
           name: string;
           email: string;
+          displayName?: string;
 }
 
 interface AuthContextType {
           user: User | null;
+          currentUser: User | null; // Added currentUser to match your Dashboard usage
           isAuthenticated: boolean;
           loading: boolean;
           login: (email: string, password: string) => Promise<void>;
@@ -36,21 +40,15 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           const [user, setUser] = useState<User | null>(null);
           const [loading, setLoading] = useState(true);
-
           const isAuthenticated = !!user;
 
-          // Check if user is already logged in
           useEffect(() => {
                     const checkAuthStatus = async () => {
                               const token = localStorage.getItem('token');
-
                               if (token) {
                                         try {
-                                                  // Configure axios with the token
                                                   axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-
-                                                  // Make a request to get user data
-                                                  const response = await axios.get(`${API_URL}/api/users/me`);
+                                                  const response = await axios.get(`${API_URL}/auth/users/me`);
                                                   setUser(response.data);
                                         } catch (error) {
                                                   console.error('Authentication error:', error);
@@ -58,7 +56,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                                                   delete axios.defaults.headers.common['Authorization'];
                                         }
                               }
-
                               setLoading(false);
                     };
 
@@ -66,62 +63,44 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           }, []);
 
           const login = async (email: string, password: string) => {
-                    try {
-                              const response = await axios.post(`${API_URL}/api/login`, { email, password });
-                              const { token, user } = response.data;
-
-                              // Save token to localStorage
-                              localStorage.setItem('token', token);
-
-                              // Set authorization header for future requests
-                              axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-
-                              // Update state
-                              setUser(user);
-                    } catch (error) {
-                              console.error('Login error:', error);
-                              throw error;
-                    }
+                    const response = await axios.post(`${API_URL}/auth/login`, { email, password });
+                    const { token, user } = response.data;
+                    localStorage.setItem('token', token);
+                    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+                    setUser(user);
           };
 
           const register = async (name: string, email: string, password: string) => {
-                    try {
-                              const response = await axios.post(`${API_URL}/api/register`, { name, email, password });
-                              const { token, user } = response.data;
-
-                              // Save token to localStorage
-                              localStorage.setItem('token', token);
-
-                              // Set authorization header for future requests
-                              axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-
-                              // Update state
-                              setUser(user);
-                    } catch (error) {
-                              console.error('Registration error:', error);
-                              throw error;
-                    }
+                    const response = await axios.post(`${API_URL}/auth/register`, {
+                              name,
+                              email,
+                              password,
+                              confirmPassword: password, // Assuming confirmPassword is the same as password
+                              displayName: name // Automatically set displayName to full name
+                    });
+                    const { token, user } = response.data;
+                    localStorage.setItem('token', token);
+                    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+                    setUser(user);
           };
 
           const logout = () => {
-                    // Remove token from localStorage
                     localStorage.removeItem('token');
-
-                    // Remove authorization header
                     delete axios.defaults.headers.common['Authorization'];
-
-                    // Update state
                     setUser(null);
           };
 
-          const value = {
-                    user,
-                    isAuthenticated,
-                    loading,
-                    login,
-                    register,
-                    logout
-          };
-
-          return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+          return (
+                    <AuthContext.Provider value={{
+                              user,
+                              currentUser: user, // Alias user as currentUser for backward compatibility
+                              isAuthenticated,
+                              loading,
+                              login,
+                              register,
+                              logout
+                    }}>
+                              {children}
+                    </AuthContext.Provider>
+          );
 };

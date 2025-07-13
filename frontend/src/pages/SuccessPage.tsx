@@ -4,7 +4,7 @@ import { useCart } from '../contexts/CartContext';
 import axios from 'axios';
 import { API_URL } from '../config';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
-import { CheckCircle, Calendar, Truck, ArrowRight } from 'lucide-react';
+import { CheckCircle, Calendar, Truck, ArrowRight, Sparkles, Gift, Star } from 'lucide-react';
 import confetti from '../utils/confetti';
 
 interface PaymentDetails {
@@ -71,10 +71,13 @@ const SuccessPage = () => {
 
           if (loading) {
                     return (
-                              <div className="flex justify-center items-center min-h-[70vh]">
-                                        <div className="text-center">
-                                                  <LoadingSpinner size="large" />
-                                                  <p className="mt-4 text-gray-600">Verifying your payment...</p>
+                              <div className="min-h-screen gradient-bg flex justify-center items-center">
+                                        <div className="text-center animate-scale-in">
+                                                  <div className="card-glass p-12">
+                                                            <LoadingSpinner size="large" />
+                                                            <p className="mt-6 text-white text-lg">Verifying your payment...</p>
+                                                            <p className="text-purple-200">Please wait while we confirm your order</p>
+                                                  </div>
                                         </div>
                               </div>
                     );
@@ -82,14 +85,17 @@ const SuccessPage = () => {
 
           if (error || !payment) {
                     return (
-                              <div className="max-w-3xl mx-auto px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
-                                        <div className="text-center">
-                                                  <h1 className="text-3xl font-extrabold text-red-600">Payment Verification Failed</h1>
-                                                  <p className="mt-2 text-lg text-gray-500">{error || 'Unable to verify payment'}</p>
-                                                  <div className="mt-6">
+                              <div className="min-h-screen gradient-bg flex items-center justify-center">
+                                        <div className="text-center animate-scale-in">
+                                                  <div className="card-glass p-12 max-w-md">
+                                                            <div className="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                                                                      <span className="text-white text-2xl">✕</span>
+                                                            </div>
+                                                            <h1 className="text-2xl font-bold text-white mb-4">Payment Verification Failed</h1>
+                                                            <p className="text-purple-200 mb-8">{error || 'Unable to verify payment'}</p>
                                                             <Link
                                                                       to="/"
-                                                                      className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700"
+                                                                      className="btn-primary px-6 py-3"
                                                             >
                                                                       Go back to home
                                                             </Link>
@@ -100,86 +106,119 @@ const SuccessPage = () => {
           }
 
           return (
-                    <div className="bg-gray-50 min-h-[80vh] py-12 px-4 sm:px-6 lg:px-8">
-                              <div className="max-w-3xl mx-auto">
-                                        <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-                                                  {/* Header */}
-                                                  <div className="bg-gradient-to-r from-green-500 to-emerald-600 px-6 py-8 text-white text-center">
-                                                            <CheckCircle className="h-16 w-16 mx-auto mb-4" />
-                                                            <h1 className="text-3xl font-bold">Payment Successful!</h1>
-                                                            <p className="mt-2 text-green-100">Thank you for your purchase</p>
+                    <div className="min-h-screen gradient-bg">
+                              {/* Animated Background Elements */}
+                              <div className="absolute inset-0 opacity-20">
+                                        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
+                                        <div className="absolute top-1/3 right-1/4 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-1000"></div>
+                                        <div className="absolute bottom-1/4 left-1/3 w-96 h-96 bg-indigo-500 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-2000"></div>
+                              </div>
+
+                              <div className="relative py-20 px-4 sm:px-6 lg:px-8">
+                                        <div className="max-w-4xl mx-auto">
+                                                  {/* Success Header */}
+                                                  <div className="text-center mb-12 animate-slide-up">
+                                                            <div className="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full mb-8 animate-bounce-slow">
+                                                                      <CheckCircle className="h-12 w-12 text-white" />
+                                                            </div>
+                                                            <h1 className="text-4xl md:text-6xl font-bold text-white mb-4">
+                                                                      Payment
+                                                                      <span className="block bg-gradient-to-r from-green-400 via-emerald-400 to-blue-400 bg-clip-text text-transparent">
+                                                                                Successful!
+                                                                      </span>
+                                                            </h1>
+                                                            <p className="text-xl text-purple-200">Thank you for your purchase! Your order is being processed.</p>
                                                   </div>
 
-                                                  {/* Order details */}
-                                                  <div className="p-6">
-                                                            <div className="border-b border-gray-200 pb-6">
-                                                                      <h2 className="text-xl font-semibold text-gray-800 mb-4">Order Details</h2>
-                                                                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                                                <div>
-                                                                                          <p className="text-sm text-gray-500">Order Reference</p>
-                                                                                          <p className="text-base font-medium text-gray-900">{payment.reference}</p>
+                                                  {/* Order Details Card */}
+                                                  <div className="card-glass p-8 mb-8 animate-scale-in">
+                                                            <div className="flex items-center justify-between mb-8">
+                                                                      <h2 className="text-2xl font-semibold text-white flex items-center">
+                                                                                <Gift className="h-6 w-6 mr-2 text-purple-400" />
+                                                                                Order Details
+                                                                      </h2>
+                                                                      <div className="flex items-center text-green-400">
+                                                                                <Star className="h-5 w-5 mr-1" />
+                                                                                <span className="font-medium">Confirmed</span>
+                                                                      </div>
+                                                            </div>
+
+                                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                                                      <div className="space-y-4">
+                                                                                <div className="stagger-animation">
+                                                                                          <p className="text-sm text-purple-200">Order Reference</p>
+                                                                                          <p className="text-lg font-mono text-white bg-white/10 px-3 py-2 rounded-lg">{payment.reference}</p>
+                                                                                </div>
+                                                                                <div className="stagger-animation">
+                                                                                          <p className="text-sm text-purple-200">Amount Paid</p>
+                                                                                          <p className="text-2xl font-bold gradient-text">{formatAmount(payment.amount)}</p>
+                                                                                </div>
+                                                                      </div>
+                                                                      <div className="space-y-4">
+                                                                                <div className="stagger-animation">
+                                                                                          <p className="text-sm text-purple-200">Date</p>
+                                                                                          <p className="text-lg text-white">{formatDate(payment.createdAt)}</p>
+                                                                                </div>
+                                                                                <div className="stagger-animation">
+                                                                                          <p className="text-sm text-purple-200">Status</p>
+                                                                                          <div className="inline-flex items-center px-3 py-1 rounded-full bg-green-500/20 border border-green-500/30">
+                                                                                                    <CheckCircle className="h-4 w-4 text-green-400 mr-2" />
+                                                                                                    <span className="text-green-300 font-medium">
+                                                                                                              {payment.status === 'success' ? 'Completed' : payment.status}
+                                                                                                    </span>
+                                                                                          </div>
+                                                                                </div>
+                                                                      </div>
+                                                            </div>
+                                                  </div>
+
+                                                  {/* What's Next Section */}
+                                                  <div className="card-glass p-8 mb-8 animate-slide-up">
+                                                            <h2 className="text-2xl font-semibold text-white mb-8 flex items-center">
+                                                                      <Sparkles className="h-6 w-6 mr-2 text-purple-400" />
+                                                                      What's Next?
+                                                            </h2>
+                                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                                                      <div className="flex items-start stagger-animation">
+                                                                                <div className="flex-shrink-0">
+                                                                                          <div className="flex items-center justify-center h-12 w-12 rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 mr-4">
+                                                                                                    <Calendar className="h-6 w-6 text-white" />
+                                                                                          </div>
                                                                                 </div>
                                                                                 <div>
-                                                                                          <p className="text-sm text-gray-500">Amount Paid</p>
-                                                                                          <p className="text-base font-medium text-gray-900">{formatAmount(payment.amount)}</p>
+                                                                                          <h3 className="text-lg font-medium text-white mb-2">Order Processing</h3>
+                                                                                          <p className="text-purple-200 leading-relaxed">
+                                                                                                    We're processing your order right now. You'll receive a confirmation email with tracking details shortly.
+                                                                                          </p>
+                                                                                </div>
+                                                                      </div>
+
+                                                                      <div className="flex items-start stagger-animation">
+                                                                                <div className="flex-shrink-0">
+                                                                                          <div className="flex items-center justify-center h-12 w-12 rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 mr-4">
+                                                                                                    <Truck className="h-6 w-6 text-white" />
+                                                                                          </div>
                                                                                 </div>
                                                                                 <div>
-                                                                                          <p className="text-sm text-gray-500">Date</p>
-                                                                                          <p className="text-base font-medium text-gray-900">{formatDate(payment.createdAt)}</p>
-                                                                                </div>
-                                                                                <div>
-                                                                                          <p className="text-sm text-gray-500">Status</p>
-                                                                                          <p className="text-base font-medium text-emerald-600">
-                                                                                                    {payment.status === 'success' ? 'Completed' : payment.status}
+                                                                                          <h3 className="text-lg font-medium text-white mb-2">Fast Shipping</h3>
+                                                                                          <p className="text-purple-200 leading-relaxed">
+                                                                                                    Your order will be shipped within 1-2 business days. Free shipping on orders over $100!
                                                                                           </p>
                                                                                 </div>
                                                                       </div>
                                                             </div>
+                                                  </div>
 
-                                                            {/* What's next */}
-                                                            <div className="pt-6">
-                                                                      <h2 className="text-xl font-semibold text-gray-800 mb-4">What's Next?</h2>
-                                                                      <div className="space-y-4">
-                                                                                <div className="flex items-start">
-                                                                                          <div className="flex-shrink-0">
-                                                                                                    <div className="flex items-center justify-center h-8 w-8 rounded-full bg-blue-100 text-blue-600">
-                                                                                                              <Calendar className="h-5 w-5" />
-                                                                                                    </div>
-                                                                                          </div>
-                                                                                          <div className="ml-4">
-                                                                                                    <h3 className="text-base font-medium text-gray-900">Order Processing</h3>
-                                                                                                    <p className="mt-1 text-sm text-gray-500">
-                                                                                                              We're processing your order. You'll receive a confirmation email shortly.
-                                                                                                    </p>
-                                                                                          </div>
-                                                                                </div>
-
-                                                                                <div className="flex items-start">
-                                                                                          <div className="flex-shrink-0">
-                                                                                                    <div className="flex items-center justify-center h-8 w-8 rounded-full bg-blue-100 text-blue-600">
-                                                                                                              <Truck className="h-5 w-5" />
-                                                                                                    </div>
-                                                                                          </div>
-                                                                                          <div className="ml-4">
-                                                                                                    <h3 className="text-base font-medium text-gray-900">Shipping</h3>
-                                                                                                    <p className="mt-1 text-sm text-gray-500">
-                                                                                                              Your order will be shipped within 1-2 business days. You'll receive tracking information.
-                                                                                                    </p>
-                                                                                          </div>
-                                                                                </div>
-                                                                      </div>
-                                                            </div>
-
-                                                            {/* Actions */}
-                                                            <div className="mt-8 flex justify-center">
-                                                                      <Link
-                                                                                to="/"
-                                                                                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                                                                      >
-                                                                                Continue Shopping
-                                                                                <ArrowRight className="ml-2 h-4 w-4" />
-                                                                      </Link>
-                                                            </div>
+                                                  {/* Action Buttons */}
+                                                  <div className="text-center animate-slide-up">
+                                                            <Link
+                                                                      to="/"
+                                                                      className="btn-primary px-8 py-4 text-lg font-semibold hover-glow inline-flex items-center"
+                                                            >
+                                                                      <Sparkles className="h-5 w-5 mr-2" />
+                                                                      Continue Shopping
+                                                                      <ArrowRight className="ml-2 h-5 w-5" />
+                                                            </Link>
                                                   </div>
                                         </div>
                               </div>
